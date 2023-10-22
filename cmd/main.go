@@ -4,11 +4,13 @@ import (
 	"context"
 	"flag"
 	"fmt"
-	sdk_wrapper "github.com/fforchino/vector-go-sdk/pkg/sdk-wrapper"
+	"log"
 	"strings"
 	"time"
 	"vectorx/pkg/intents"
 	"vectorx/pkg/stats"
+
+	sdk_wrapper "github.com/fforchino/vector-go-sdk/pkg/sdk-wrapper"
 )
 
 var Debug = true
@@ -24,9 +26,9 @@ func main() {
 	flag.Parse()
 
 	if Debug {
-		println("SERIAL: " + *serial)
-		println("LOCALE: " + *locale)
-		println("SPEECH TEXT: " + *speechText)
+		log.Println("SERIAL: " + *serial)
+		log.Println("LOCALE: " + *locale)
+		log.Println("SPEECH TEXT: " + *speechText)
 	}
 	language := *locale
 	if strings.Contains(language, "-") {
@@ -42,7 +44,7 @@ func main() {
 		// Init SDK before intent match, so registration can use custom settings if needed
 		err := sdk_wrapper.InitSDKForWirepod(*serial)
 		if err != nil {
-			println("FATAL: could not load Vector settings from JDOCS")
+			log.Println("FATAL: could not load Vector settings from JDOCS")
 			return
 		}
 
@@ -59,16 +61,16 @@ func main() {
 			stats.StatsIntentHandled(true)
 			robotLocale := sdk_wrapper.GetLocale()
 			if Debug {
-				println("ROBOT LOCALE: " + robotLocale)
+				log.Println("ROBOT LOCALE: " + robotLocale)
 			}
 			if robotLocale != *locale {
 				if Debug {
-					println("Different locales! Setting " + *locale)
+					prinlog.Printlntln("Different locales! Setting " + *locale)
 				}
 				sdk_wrapper.SetLocale(*locale)
 			}
 			if Debug {
-				println("ROBOT LOCALE: " + robotLocale)
+				log.Println("ROBOT LOCALE: " + robotLocale)
 			}
 
 			// Extract params
