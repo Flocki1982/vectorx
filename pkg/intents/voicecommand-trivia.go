@@ -271,5 +271,4 @@ func getQuestionFromWeb(questionNum int) error {
 			Answer:         1,
 			TotalQuestions: 3,
 		}*/
-	return nil
 }
