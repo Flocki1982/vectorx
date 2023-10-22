@@ -1,11 +1,13 @@
 package intents
 
 import (
-	sdk_wrapper "github.com/fforchino/vector-go-sdk/pkg/sdk-wrapper"
+	"log"
 	"os"
 	"os/exec"
 	"path"
 	"strings"
+
+	sdk_wrapper "github.com/fforchino/vector-go-sdk/pkg/sdk-wrapper"
 )
 
 /**********************************************************************************************************************/
@@ -73,7 +75,7 @@ func changeLanguage(intent IntentDef, speechText string, params IntentParams) st
 	cmd := exec.Command(chipperPatcherPath, loc, "&")
 	err := cmd.Start()
 	if err != nil {
-		log.println(err.Error())
+		log.Println(err.Error())
 	}
 	return returnIntent
 }

@@ -1,8 +1,10 @@
 package intents
 
 import (
-	sdk_wrapper "github.com/fforchino/vector-go-sdk/pkg/sdk-wrapper"
+	"log"
 	"strings"
+
+	sdk_wrapper "github.com/fforchino/vector-go-sdk/pkg/sdk-wrapper"
 )
 
 /**********************************************************************************************************************/
@@ -44,7 +46,7 @@ func HowDoYouSay(intent IntentDef, speechText string, params IntentParams) strin
 	if strings.Contains(speechText, wordSplitter) && strings.Contains(speechText, languageSplitter) {
 		splitPhrase := strings.Split(speechText, wordSplitter)
 		tmp := strings.TrimSpace(splitPhrase[1])
-		log.println(tmp)
+		log.Println(tmp)
 		splitPhrase2 := strings.Split(tmp, languageSplitter)
 		word = splitPhrase2[0]
 		language = splitPhrase2[1]
@@ -56,7 +58,7 @@ func HowDoYouSay(intent IntentDef, speechText string, params IntentParams) strin
 				sdk_wrapper.SetLocale("en-US")
 				sdk_wrapper.SetLanguage(sdk_wrapper.LANGUAGE_ENGLISH)
 				trans = sdk_wrapper.Translate(word, currentLanguage, sdk_wrapper.LANGUAGE_ENGLISH) + "!"
-				log.println(word + "/" + currentLanguage + "/" + sdk_wrapper.LANGUAGE_ENGLISH + "/" + trans)
+				log.Println(word + "/" + currentLanguage + "/" + sdk_wrapper.LANGUAGE_ENGLISH + "/" + trans)
 			} else if language == getText(STR_LANGUAGE_ITALIAN) {
 				sdk_wrapper.SetLocale("it-IT")
 				sdk_wrapper.SetLanguage(sdk_wrapper.LANGUAGE_ITALIAN)

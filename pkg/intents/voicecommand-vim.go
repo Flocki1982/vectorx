@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	sdk_wrapper "github.com/fforchino/vector-go-sdk/pkg/sdk-wrapper"
 	"image/color"
 	"io/ioutil"
 	"log"
@@ -13,6 +12,8 @@ import (
 	"os"
 	"strings"
 	vim_client "vectorx/pkg/vim-client"
+
+	sdk_wrapper "github.com/fforchino/vector-go-sdk/pkg/sdk-wrapper"
 )
 
 var VIM_SERVER_URL = "localhost:8070"
@@ -83,7 +84,7 @@ func signUpToChat(intent IntentDef, speechText string, params IntentParams) stri
 		} else if err.Error() == "Already registered" {
 			sdk_wrapper.SayText(getTextEx("STR_VIM_ERROR_ALREADY_REGISTERED", []string{robotName}))
 		} else {
-			log.println(err.Error())
+			log.Println(err.Error())
 		}
 	}
 	if returnIntent == STANDARD_INTENT_IMPERATIVE_NEGATIVE {
@@ -317,11 +318,11 @@ func VIMAPISignup(robotName string, serialNo string) error {
 
 	if err != nil {
 		log.Fatal(err)
-		log.println("FATAL: " + err.Error())
+		log.Println("FATAL: " + err.Error())
 	} else {
 		var responseText []byte
 		responseText, err = ioutil.ReadAll(resp.Body)
-		log.println("RESPONSE: " + string(responseText))
+		log.Println("RESPONSE: " + string(responseText))
 		if string(responseText) != "success" {
 			err = errors.New(string(responseText))
 		} else {
@@ -391,7 +392,7 @@ func VIMAPISendMessageTo(botTo string, botMessage string) error {
 		myself, e1 := VIMAPIGetUserInfo(robotName)
 		other, e2 := VIMAPIGetUserInfo(botTo)
 		if e1 == nil && e2 == nil {
-			log.println(fmt.Sprintf("Sending message '%s' from %s to %s", botMessage, myself.UserId, other.UserId))
+			log.Println(fmt.Sprintf("Sending message '%s' from %s to %s", botMessage, myself.UserId, other.UserId))
 			err := vim_client.SendMessageAndGo(VIM_SERVER_URL,
 				myself.DisplayName,
 				myself.UserId,
@@ -402,7 +403,7 @@ func VIMAPISendMessageTo(botTo string, botMessage string) error {
 
 			if err != nil {
 				log.Fatal(err)
-				log.println("FATAL: " + err.Error())
+				log.Println("FATAL: " + err.Error())
 			}
 			return err
 		}
@@ -418,7 +419,7 @@ func VIMAPIGetUserInfo(userName string) (VIMUserInfoData, error) {
 
 	if err != nil {
 		if VIMDebug {
-			log.println("FATAL: " + err.Error())
+			log.Println("FATAL: " + err.Error())
 		}
 	} else {
 		var responseText []byte
@@ -426,7 +427,7 @@ func VIMAPIGetUserInfo(userName string) (VIMUserInfoData, error) {
 		//println("RESPONSE: " + string(responseText))
 		err = json.Unmarshal([]byte(responseText), &info)
 		if err != nil {
-			log.println(err.Error())
+			log.Println(err.Error())
 			return dummy, err
 		}
 		for i := range info {
@@ -450,7 +451,7 @@ func VIMAPICheckMessages(robotSerialNo string, lastReadMessageId int32) ([]VIMCh
 
 		if err != nil {
 			if VIMDebug {
-				log.println("FATAL: " + err.Error())
+				log.Println("FATAL: " + err.Error())
 			}
 		} else {
 			var responseText []byte
@@ -458,7 +459,7 @@ func VIMAPICheckMessages(robotSerialNo string, lastReadMessageId int32) ([]VIMCh
 			//println("RESPONSE: " + string(responseText))
 			err = json.Unmarshal([]byte(responseText), &arr)
 			if err != nil && VIMDebug {
-				log.println(err.Error())
+				log.Println(err.Error())
 			}
 			return arr, err
 		}

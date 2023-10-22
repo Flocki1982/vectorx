@@ -5,14 +5,16 @@ import (
 	"context"
 	"encoding/binary"
 	"fmt"
-	sdk_wrapper "github.com/fforchino/vector-go-sdk/pkg/sdk-wrapper"
-	"github.com/fforchino/vector-go-sdk/pkg/vectorpb"
-	"github.com/fogleman/gg"
 	"image"
 	"image/color"
+	"log"
 	"math/rand"
 	"os"
 	"time"
+
+	sdk_wrapper "github.com/fforchino/vector-go-sdk/pkg/sdk-wrapper"
+	"github.com/fforchino/vector-go-sdk/pkg/vectorpb"
+	"github.com/fogleman/gg"
 )
 
 /**********************************************************************************************************************/
@@ -102,7 +104,7 @@ func doPong(useFx bool) {
 	go func() {
 		for true {
 			if useFx && fx != "" {
-				log.println(fx)
+				log.Println(fx)
 				sdk_wrapper.PlaySound(fx)
 				fx = ""
 			}
@@ -117,14 +119,14 @@ func doPong(useFx bool) {
 				evtUserIntent := evt.GetUserIntent()
 				evtObject := evt.GetObjectEvent()
 				if evtUserIntent != nil {
-					log.println(fmt.Sprintf("Received intent %d", evtUserIntent.IntentId))
-					log.println(evtUserIntent.JsonData)
-					log.println(evtUserIntent.String())
+					log.Println(fmt.Sprintf("Received intent %d", evtUserIntent.IntentId))
+					log.Println(evtUserIntent.JsonData)
+					log.Println(evtUserIntent.String())
 				}
 				if evtObject != nil {
 					appearedObject := evtObject.GetObjectAvailable()
 					if appearedObject != nil {
-						log.println("An object is available")
+						log.Println("An object is available")
 					}
 					observerdObject := evtObject.GetRobotObservedObject()
 					if observerdObject != nil && observerdObject.GetObjectType() == vectorpb.ObjectType_BLOCK_LIGHTCUBE1 {
@@ -193,7 +195,7 @@ func doPong(useFx bool) {
 				fx = sdk_wrapper.GetDataPath("audio/pong/ball_ping.pcm")
 				bSpeed.X = bSpeed.X * -1
 				bSpeed.Y -= (humanPaddle.Y - ballObj.Y) / 4
-				log.println(fmt.Sprintf(">> HUMAN HITS THE BALL, new speed %d,%d", bSpeed.X, bSpeed.Y))
+				log.Println(fmt.Sprintf(">> HUMAN HITS THE BALL, new speed %d,%d", bSpeed.X, bSpeed.Y))
 			} else {
 				// Ball lost
 				if vectorScore < 9 {
@@ -206,7 +208,7 @@ func doPong(useFx bool) {
 				ballObj.Y = HEIGHT/2 + -1*HEIGHT/5 + rnd.Intn(HEIGHT/5*2)
 				bSpeed.X = -1 * SPEED
 				bSpeed.Y = -3 + rnd.Intn(6)
-				log.println(fmt.Sprintf(">> BALL LOST, new speed %d,%d", bSpeed.X, bSpeed.Y))
+				log.Println(fmt.Sprintf(">> BALL LOST, new speed %d,%d", bSpeed.X, bSpeed.Y))
 			}
 		} else if ballObj.X+BALL_WIDTH >= WIDTH-PADDLE_WIDTH && bSpeed.X > 0 {
 			if ballObj.Y >= vectorPaddle.Y-PADDLE_HEIGHT/2 && ballObj.Y <= vectorPaddle.Y+PADDLE_HEIGHT/2 {
@@ -214,7 +216,7 @@ func doPong(useFx bool) {
 				fx = sdk_wrapper.GetDataPath("audio/pong/ball_pong.pcm")
 				bSpeed.X = bSpeed.X * -1
 				bSpeed.Y -= (vectorPaddle.Y - ballObj.Y) / 4
-				log.println(fmt.Sprintf(">> VECTOR HITS THE BALL, new speed %d,%d", bSpeed.X, bSpeed.Y))
+				log.Println(fmt.Sprintf(">> VECTOR HITS THE BALL, new speed %d,%d", bSpeed.X, bSpeed.Y))
 			} else {
 				// Ball lost
 				if humanScore < 9 {
@@ -227,11 +229,11 @@ func doPong(useFx bool) {
 				ballObj.Y = HEIGHT/2 + -1*HEIGHT/5 + rnd.Intn(HEIGHT/5*2)
 				bSpeed.X = -1 * SPEED
 				bSpeed.Y = -3 + rnd.Intn(6)
-				log.println(fmt.Sprintf(">> BALL LOST, new speed %d,%d", bSpeed.X, bSpeed.Y))
+				log.Println(fmt.Sprintf(">> BALL LOST, new speed %d,%d", bSpeed.X, bSpeed.Y))
 			}
 		} else if (ballObj.Y <= BALL_HEIGHT && bSpeed.Y < 0) || (ballObj.Y+BALL_HEIGHT > HEIGHT && bSpeed.Y > 0) {
 			// Ball hits top or bottom part of the screen, bounce back
-			log.println(fmt.Sprintf(">> BALL BOUNCE, new speed %d,%d", bSpeed.X, bSpeed.Y))
+			log.Println(fmt.Sprintf(">> BALL BOUNCE, new speed %d,%d", bSpeed.X, bSpeed.Y))
 			fx = sdk_wrapper.GetDataPath("audio/pong/ball_bounce.pcm")
 			bSpeed.Y = bSpeed.Y * -1
 		}

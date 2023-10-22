@@ -20,14 +20,14 @@ var openCVServerAddr = "http://localhost:8090"
 
 func CreateClient() {
 	//setup a mocked http client.
-	log.println("")
-	log.println("Setup HTTP client")
+	log.Println("")
+	log.Println("Setup HTTP client")
 	ts := httptest.NewTLSServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		b, err := httputil.DumpRequest(r, true)
 		if err != nil {
 			panic(err)
 		}
-		log.println(fmt.Sprintf("%s", b))
+		log.Println(fmt.Sprintf("%s", b))
 	}))
 	defer ts.Close()
 	client = ts.Client()
@@ -51,7 +51,7 @@ func SendImageToImageServer(img *image.Image) string {
 	// Upload and get back the json response
 	resp, err := Upload(client, openCVServerAddr, values)
 	if err != nil {
-		log.println("Response error!")
+		log.Println("Response error!")
 		return ""
 	}
 
@@ -92,7 +92,7 @@ func Upload(client *http.Client, url string, values map[string]io.Reader) (respo
 	// Now that you have a form, you can submit it to your handler.
 	req, err := http.NewRequest("POST", url, &b)
 	if err != nil {
-		log.println("Error when performing HTTP request")
+		log.Println("Error when performing HTTP request")
 		return "", err
 	}
 	// Don't forget to set the content type, this will contain the boundary.
@@ -102,14 +102,14 @@ func Upload(client *http.Client, url string, values map[string]io.Reader) (respo
 	//println("POSTing...")
 	res, err := client.Do(req)
 	if err != nil {
-		log.println(err.Error())
+		log.Println(err.Error())
 		return "", err
 	}
 
 	// Check the response
 	if res.StatusCode != http.StatusOK {
 		err = fmt.Errorf("bad status: %s", res.Status)
-		log.println(fmt.Errorf("bad status: %s", res.Status))
+		log.Println(fmt.Errorf("bad status: %s", res.Status))
 	} else {
 		bodyBytes, err := io.ReadAll(res.Body)
 		if err != nil {

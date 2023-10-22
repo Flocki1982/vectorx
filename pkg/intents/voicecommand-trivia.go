@@ -2,11 +2,13 @@ package intents
 
 import (
 	"encoding/json"
-	sdk_wrapper "github.com/fforchino/vector-go-sdk/pkg/sdk-wrapper"
 	"io/ioutil"
+	"log"
 	"net/http"
 	"strconv"
 	"strings"
+
+	sdk_wrapper "github.com/fforchino/vector-go-sdk/pkg/sdk-wrapper"
 )
 
 type TriviaGameData struct {
@@ -255,7 +257,7 @@ func getQuestionFromWeb(questionNum int) error {
 	if err == nil {
 		var responseText []byte
 		responseText, err = ioutil.ReadAll(resp.Body)
-		log.println("RESPONSE: " + string(responseText))
+		log.Println("RESPONSE: " + string(responseText))
 		err = json.Unmarshal(responseText, &CurrentQuestion)
 	}
 	return err

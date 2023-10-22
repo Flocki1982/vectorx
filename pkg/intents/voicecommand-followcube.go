@@ -3,11 +3,13 @@ package intents
 import (
 	"context"
 	"fmt"
-	sdk_wrapper "github.com/fforchino/vector-go-sdk/pkg/sdk-wrapper"
-	"github.com/fforchino/vector-go-sdk/pkg/vectorpb"
 	"image/color"
+	"log"
 	"math"
 	"time"
+
+	sdk_wrapper "github.com/fforchino/vector-go-sdk/pkg/sdk-wrapper"
+	"github.com/fforchino/vector-go-sdk/pkg/vectorpb"
 )
 
 /**********************************************************************************************************************/
@@ -67,14 +69,14 @@ func doFollow(useFx bool) {
 				evtUserIntent := evt.GetUserIntent()
 				evtObject := evt.GetObjectEvent()
 				if evtUserIntent != nil {
-					log.println(fmt.Sprintf("Received intent %d", evtUserIntent.IntentId))
-					log.println(evtUserIntent.JsonData)
-					log.println(evtUserIntent.String())
+					log.Println(fmt.Sprintf("Received intent %d", evtUserIntent.IntentId))
+					log.Println(evtUserIntent.JsonData)
+					log.Println(evtUserIntent.String())
 				}
 				if evtObject != nil {
 					appearedObject := evtObject.GetObjectAvailable()
 					if appearedObject != nil {
-						log.println("An object is available")
+						log.Println("An object is available")
 					}
 					observerdObject := evtObject.GetRobotObservedObject()
 					if observerdObject != nil && observerdObject.GetObjectType() == vectorpb.ObjectType_BLOCK_LIGHTCUBE1 {
@@ -87,7 +89,7 @@ func doFollow(useFx bool) {
 						// delta : w/2 = 1 : MAX_SPEED
 						speed := delta * MAX_SPEED / (WIDTH / 2)
 						cubeSize = math.Sqrt(float64(cubeWidth*cubeWidth + cubeHeight + cubeHeight))
-						log.println(fmt.Sprintf("Spotted cube at %f,%f size: %f => Speed : %f", cubex, cubey, cubeSize, speed))
+						log.Println(fmt.Sprintf("Spotted cube at %f,%f size: %f => Speed : %f", cubex, cubey, cubeSize, speed))
 
 						if cubeSize < oldSize {
 							if speed < 0 {
@@ -95,7 +97,7 @@ func doFollow(useFx bool) {
 							} else {
 								sdk_wrapper.DriveWheelsForward(0, speed, 0, speed)
 							}
-							log.println("FORWARD")
+							log.Println("FORWARD")
 							time.Sleep(time.Duration(500) * time.Millisecond)
 							sdk_wrapper.DriveWheelsForward(0, 0, 0, 0)
 						}

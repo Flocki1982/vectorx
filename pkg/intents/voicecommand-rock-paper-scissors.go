@@ -3,13 +3,15 @@ package intents
 import (
 	"encoding/json"
 	"fmt"
-	sdk_wrapper "github.com/fforchino/vector-go-sdk/pkg/sdk-wrapper"
 	"image"
 	"image/color"
+	"log"
 	"math/rand"
 	"os"
 	"time"
 	opencv_ifc "vectorx/pkg/opencv-ifc"
+
+	sdk_wrapper "github.com/fforchino/vector-go-sdk/pkg/sdk-wrapper"
 )
 
 /**********************************************************************************************************************/
@@ -88,7 +90,7 @@ func playGame(numSteps int) {
 
 			var handInfo map[string]interface{}
 			jsonData := opencv_ifc.SendImageToImageServer(&image)
-			log.println("OpenCV server response: " + jsonData)
+			log.Println("OpenCV server response: " + jsonData)
 			json.Unmarshal([]byte(jsonData), &handInfo)
 			numFingers := -1
 			numFingers = int(handInfo["raisedfingers"].(float64))
@@ -96,7 +98,7 @@ func playGame(numSteps int) {
 			answer := ""
 			userMove := ""
 
-			log.println(fmt.Sprintf("num fingers %d", numFingers))
+			log.Println(fmt.Sprintf("num fingers %d", numFingers))
 
 			switch numFingers {
 			case 0:

@@ -2,11 +2,13 @@ package intents
 
 import (
 	"fmt"
-	sdk_wrapper "github.com/fforchino/vector-go-sdk/pkg/sdk-wrapper"
-	"github.com/fforchino/vector-go-sdk/pkg/vectorpb"
 	"image/color"
+	"log"
 	"math/rand"
 	"time"
+
+	sdk_wrapper "github.com/fforchino/vector-go-sdk/pkg/sdk-wrapper"
+	"github.com/fforchino/vector-go-sdk/pkg/vectorpb"
 )
 
 /**********************************************************************************************************************/
@@ -63,9 +65,9 @@ func doBingo() {
 				evtUserIntent := evt.GetUserIntent()
 				evtRobotState := evt.GetRobotState()
 				if evtUserIntent != nil {
-					log.println(fmt.Sprintf("Received intent %d", evtUserIntent.IntentId))
-					log.println(evtUserIntent.JsonData)
-					log.println(evtUserIntent.String())
+					log.Println(fmt.Sprintf("Received intent %d", evtUserIntent.IntentId))
+					log.Println(evtUserIntent.JsonData)
+					log.Println(evtUserIntent.String())
 				}
 				if evtRobotState != nil {
 					if evtRobotState.Status&uint32(vectorpb.RobotStatus_ROBOT_STATUS_IS_BUTTON_PRESSED) > 0 {
@@ -75,13 +77,13 @@ func doBingo() {
 					}
 					if evtRobotState.Status&uint32(vectorpb.RobotStatus_ROBOT_STATUS_IS_PICKED_UP) > 0 ||
 						evtRobotState.Status&uint32(vectorpb.RobotStatus_ROBOT_STATUS_IS_BEING_HELD) > 0 {
-							log.println("I am being picked up.")
+						log.Println("I am being picked up.")
 					}
 					if evtRobotState.Status&uint32(vectorpb.RobotStatus_ROBOT_STATUS_IS_BUTTON_PRESSED) == 0 &&
 						evtRobotState.TouchData.IsBeingTouched == true && !isBusy {
 						isBusy = true
 						go func() {
-							log.println("I am being touched.")
+							log.Println("I am being touched.")
 							number := getRandomNumber(rnd)
 							_ = sdk_wrapper.PlaySound(sdk_wrapper.GetDataPath("audio/rattle.wav"))
 							sdk_wrapper.WriteColoredText(number, 110, true, color.RGBA{255, 255, 255, 255}, 500, false)
