@@ -88,7 +88,7 @@ func playGame(numSteps int) {
 
 			var handInfo map[string]interface{}
 			jsonData := opencv_ifc.SendImageToImageServer(&image)
-			println("OpenCV server response: " + jsonData)
+			log.println("OpenCV server response: " + jsonData)
 			json.Unmarshal([]byte(jsonData), &handInfo)
 			numFingers := -1
 			numFingers = int(handInfo["raisedfingers"].(float64))
@@ -96,7 +96,7 @@ func playGame(numSteps int) {
 			answer := ""
 			userMove := ""
 
-			println(fmt.Sprintf("num fingers %d", numFingers))
+			log.println(fmt.Sprintf("num fingers %d", numFingers))
 
 			switch numFingers {
 			case 0:

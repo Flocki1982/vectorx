@@ -63,9 +63,9 @@ func doBingo() {
 				evtUserIntent := evt.GetUserIntent()
 				evtRobotState := evt.GetRobotState()
 				if evtUserIntent != nil {
-					println(fmt.Sprintf("Received intent %d", evtUserIntent.IntentId))
-					println(evtUserIntent.JsonData)
-					println(evtUserIntent.String())
+					log.println(fmt.Sprintf("Received intent %d", evtUserIntent.IntentId))
+					log.println(evtUserIntent.JsonData)
+					log.println(evtUserIntent.String())
 				}
 				if evtRobotState != nil {
 					if evtRobotState.Status&uint32(vectorpb.RobotStatus_ROBOT_STATUS_IS_BUTTON_PRESSED) > 0 {
@@ -75,13 +75,13 @@ func doBingo() {
 					}
 					if evtRobotState.Status&uint32(vectorpb.RobotStatus_ROBOT_STATUS_IS_PICKED_UP) > 0 ||
 						evtRobotState.Status&uint32(vectorpb.RobotStatus_ROBOT_STATUS_IS_BEING_HELD) > 0 {
-						println("I am being picked up.")
+							log.println("I am being picked up.")
 					}
 					if evtRobotState.Status&uint32(vectorpb.RobotStatus_ROBOT_STATUS_IS_BUTTON_PRESSED) == 0 &&
 						evtRobotState.TouchData.IsBeingTouched == true && !isBusy {
 						isBusy = true
 						go func() {
-							println("I am being touched.")
+							log.println("I am being touched.")
 							number := getRandomNumber(rnd)
 							_ = sdk_wrapper.PlaySound(sdk_wrapper.GetDataPath("audio/rattle.wav"))
 							sdk_wrapper.WriteColoredText(number, 110, true, color.RGBA{255, 255, 255, 255}, 500, false)

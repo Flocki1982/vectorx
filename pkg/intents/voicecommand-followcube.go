@@ -67,14 +67,14 @@ func doFollow(useFx bool) {
 				evtUserIntent := evt.GetUserIntent()
 				evtObject := evt.GetObjectEvent()
 				if evtUserIntent != nil {
-					println(fmt.Sprintf("Received intent %d", evtUserIntent.IntentId))
-					println(evtUserIntent.JsonData)
-					println(evtUserIntent.String())
+					log.println(fmt.Sprintf("Received intent %d", evtUserIntent.IntentId))
+					log.println(evtUserIntent.JsonData)
+					log.println(evtUserIntent.String())
 				}
 				if evtObject != nil {
 					appearedObject := evtObject.GetObjectAvailable()
 					if appearedObject != nil {
-						println("An object is available")
+						log.println("An object is available")
 					}
 					observerdObject := evtObject.GetRobotObservedObject()
 					if observerdObject != nil && observerdObject.GetObjectType() == vectorpb.ObjectType_BLOCK_LIGHTCUBE1 {
@@ -87,7 +87,7 @@ func doFollow(useFx bool) {
 						// delta : w/2 = 1 : MAX_SPEED
 						speed := delta * MAX_SPEED / (WIDTH / 2)
 						cubeSize = math.Sqrt(float64(cubeWidth*cubeWidth + cubeHeight + cubeHeight))
-						println(fmt.Sprintf("Spotted cube at %f,%f size: %f => Speed : %f", cubex, cubey, cubeSize, speed))
+						log.println(fmt.Sprintf("Spotted cube at %f,%f size: %f => Speed : %f", cubex, cubey, cubeSize, speed))
 
 						if cubeSize < oldSize {
 							if speed < 0 {
@@ -95,7 +95,7 @@ func doFollow(useFx bool) {
 							} else {
 								sdk_wrapper.DriveWheelsForward(0, speed, 0, speed)
 							}
-							println("FORWARD")
+							log.println("FORWARD")
 							time.Sleep(time.Duration(500) * time.Millisecond)
 							sdk_wrapper.DriveWheelsForward(0, 0, 0, 0)
 						}

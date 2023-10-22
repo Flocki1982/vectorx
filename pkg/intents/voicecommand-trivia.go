@@ -255,7 +255,7 @@ func getQuestionFromWeb(questionNum int) error {
 	if err == nil {
 		var responseText []byte
 		responseText, err = ioutil.ReadAll(resp.Body)
-		println("RESPONSE: " + string(responseText))
+		log.println("RESPONSE: " + string(responseText))
 		err = json.Unmarshal(responseText, &CurrentQuestion)
 	}
 	return err

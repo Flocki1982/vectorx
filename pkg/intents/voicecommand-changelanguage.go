@@ -73,7 +73,7 @@ func changeLanguage(intent IntentDef, speechText string, params IntentParams) st
 	cmd := exec.Command(chipperPatcherPath, loc, "&")
 	err := cmd.Start()
 	if err != nil {
-		println(err.Error())
+		log.println(err.Error())
 	}
 	return returnIntent
 }

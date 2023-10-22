@@ -147,7 +147,7 @@ func doWeatherForecast(intent IntentDef, speechText string, params IntentParams)
 			} else if params.Weather.Condition == getText("STR_WINDY") || params.Weather.Condition == getText("STR_TORNADO") {
 				sdk_wrapper.PlaySound(sdk_wrapper.GetDataPath("audio/weather/wind.mp3"))
 			} else if params.Weather.Condition == getText("STR_SUNNY") {
-				println(sdk_wrapper.GetDataPath("audio/weather/sunny.mp3"))
+				log.println(sdk_wrapper.GetDataPath("audio/weather/sunny.mp3"))
 				sdk_wrapper.PlaySound(sdk_wrapper.GetDataPath("audio/weather/sunny.mp3"))
 			} else if params.Weather.Condition == getText("STR_CLEAR") {
 				sdk_wrapper.PlaySound(sdk_wrapper.GetDataPath("audio/weather/night.mp3"))
@@ -179,10 +179,10 @@ func weatherParser(speechText string, botLocation string, botUnits string) (stri
 		} else if len(splitLocation) == 3 {
 			speechLocation = splitLocation[0] + " " + splitLocation[1] + ", " + splitLocation[2]
 		}
-		println("Location parsed from speech: " + "`" + speechLocation + "`")
+		log.println("Location parsed from speech: " + "`" + speechLocation + "`")
 		specificLocation = true
 	} else {
-		println("No location parsed from speech")
+		log.println("No location parsed from speech")
 		specificLocation = false
 	}
 	hoursFromNow = 0
@@ -201,7 +201,7 @@ func weatherParser(speechText string, botLocation string, botUnits string) (stri
 		strings.Contains(speechText, getText(STR_WEATHER_TOMORROW)) {
 		hoursFromNow = 24 - hours + 9
 	}
-	println("Looking for forecast " + strconv.Itoa(hoursFromNow) + " hours from now...")
+	log.println("Looking for forecast " + strconv.Itoa(hoursFromNow) + " hours from now...")
 
 	if specificLocation {
 		apiLocation = speechLocation
@@ -228,25 +228,25 @@ func getWeather(location string, botUnits string, hoursFromNow int) (string, str
 	weatherAPIProvider := os.Getenv("WEATHERAPI_PROVIDER")
 	if weatherAPIEnabled == "true" && weatherAPIKey != "" {
 		weatherEnabled = true
-		println("Weather API Enabled")
+		log.println("Weather API Enabled")
 	} else {
 		weatherEnabled = false
-		println("Weather API not enabled, using placeholder")
+		log.println("Weather API not enabled, using placeholder")
 		if weatherAPIEnabled == "true" && weatherAPIKey == "" {
-			println("Weather API enabled, but Weather API key not set")
+			log.println("Weather API enabled, but Weather API key not set")
 		}
 	}
 	if weatherEnabled {
 		if botUnits != "" {
 			if botUnits == "F" {
-				println("Weather units set to F")
+				log.println("Weather units set to F")
 				weatherAPIUnit = "F"
 			} else if botUnits == "C" {
-				println("Weather units set to C")
+				log.println("Weather units set to C")
 				weatherAPIUnit = "C"
 			}
 		} else if weatherAPIUnit != "F" && weatherAPIUnit != "C" {
-			println("Weather API unit not set, using F")
+			log.println("Weather API unit not set, using F")
 			weatherAPIUnit = "F"
 		}
 	}
@@ -257,7 +257,7 @@ func getWeather(location string, botUnits string, hoursFromNow int) (string, str
 		url := "http://api.openweathermap.org/geo/1.0/direct?q=" + location + "&limit=1&appid=" + weatherAPIKey
 		resp, err := http.Get(url)
 		if err != nil {
-			println(err.Error())
+			log.println(err.Error())
 		}
 		defer resp.Body.Close()
 		body, _ := io.ReadAll(resp.Body)
@@ -267,10 +267,10 @@ func getWeather(location string, botUnits string, hoursFromNow int) (string, str
 
 		err = json.Unmarshal([]byte(geoCodingResponse), &geoCodingInfoStruct)
 		if err != nil {
-			println(err)
+			log.println(err)
 		}
 		if len(geoCodingInfoStruct) == 0 {
-			println("Geo provided no response.")
+			log.println("Geo provided no response.")
 			condition = getText("STR_UNDEFINED")
 			is_forecast = "false"
 			local_datetime = "test"              // preferably local time in UTC ISO 8601 format ("2022-06-15 12:21:22.123")
@@ -282,10 +282,10 @@ func getWeather(location string, botUnits string, hoursFromNow int) (string, str
 		Lat := fmt.Sprintf("%f", geoCodingInfoStruct[0].Lat)
 		Lon := fmt.Sprintf("%f", geoCodingInfoStruct[0].Lon)
 
-		println("Lat: " + Lat + ", Lon: " + Lon)
-		println("Name: " + geoCodingInfoStruct[0].Name)
-		println("Country: " + geoCodingInfoStruct[0].Country)
-		println("TTS Language: " + sdk_wrapper.GetLanguage())
+		log.println("Lat: " + Lat + ", Lon: " + Lon)
+		log.println("Name: " + geoCodingInfoStruct[0].Name)
+		log.println("Country: " + geoCodingInfoStruct[0].Country)
+		log.println("TTS Language: " + sdk_wrapper.GetLanguage())
 
 		// Now that we have Lat and Lon, let's query the weather
 		units := "metric"
@@ -321,7 +321,7 @@ func getWeather(location string, botUnits string, hoursFromNow int) (string, str
 		}
 
 		conditionCode := openWeatherMapAPIResponse.Weather[0].Id
-		println(conditionCode)
+		log.println(conditionCode)
 
 		if conditionCode < 300 {
 			// Thunderstorm
@@ -415,7 +415,7 @@ func getWeather(location string, botUnits string, hoursFromNow int) (string, str
 		is_forecast = "false"
 		t := time.Unix(int64(openWeatherMapAPIResponse.DT), 0)
 		local_datetime = t.Format(time.RFC850)
-		println(local_datetime)
+		log.println(local_datetime)
 		speakable_location_string = openWeatherMapAPIResponse.Name
 		temperature = fmt.Sprintf("%d", temp)
 		if weatherAPIUnit == "C" {
